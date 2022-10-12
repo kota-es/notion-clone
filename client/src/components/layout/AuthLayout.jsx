@@ -14,8 +14,8 @@ const AuthLayout = () => {
           />
           Notionクローン開発
         </Box>
+        <Outlet />
       </Container>
-      <Outlet />
     </div>
   )
 }
