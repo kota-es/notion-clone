@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import autApi from "../api/authApi";
 
 const Register = () => {
-  const [usernameErrText, setUsernameErrText] = useState();
-  const [passwordErrText, setPasswordErrText] = useState();
-  const [confirmErrText, setConfirmErrText] = useState();
+  const navigate = useNavigate();
+
+  const [usernameErrText, setUsernameErrText] = useState("");
+  const [passwordErrText, setPasswordErrText] = useState("");
+  const [confirmErrText, setConfirmErrText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,6 +45,8 @@ const Register = () => {
 
     if (error) return;
 
+    setLoading(true);
+
     // 新規登録APIを叩く
     try {
       const res = await autApi.register({
@@ -49,8 +54,10 @@ const Register = () => {
         password,
         confirmPassword,
       });
+      setLoading(false);
       localStorage.setItem("token", res.token);
       console.log("新規登録に成功しました");
+      navigate("/");
     } catch (err) {
       const errors = err.data.errors;
       console.log(errors);
@@ -65,6 +72,7 @@ const Register = () => {
           setUsernameErrText(err.msg);
         }
       });
+      setLoading(false);
     }
   };
 
@@ -80,6 +88,7 @@ const Register = () => {
           required
           helperText={usernameErrText}
           error={usernameErrText !== ""}
+          disabled={loading}
         />
         <TextField
           fullWidth
@@ -91,6 +100,7 @@ const Register = () => {
           required
           helperText={passwordErrText}
           error={passwordErrText !== ""}
+          disabled={loading}
         />
         <TextField
           fullWidth
@@ -102,12 +112,13 @@ const Register = () => {
           required
           helperText={confirmErrText}
           error={confirmErrText !== ""}
+          disabled={loading}
         />
         <LoadingButton
           sx={{ mt: 3, mb: 2 }}
           fullWidth
           type="submit"
-          loading={false}
+          loading={loading}
           color="primary"
           variant="outlined"
         >
