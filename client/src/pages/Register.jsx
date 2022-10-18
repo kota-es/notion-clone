@@ -66,10 +66,10 @@ const Register = () => {
           setUsernameErrText(err.msg);
         }
         if (err.param === "password") {
-          setUsernameErrText(err.msg);
+          setPasswordErrText(err.msg);
         }
         if (err.param === "confirmPassword") {
-          setUsernameErrText(err.msg);
+          setConfirmErrText(err.msg);
         }
       });
       setLoading(false);
